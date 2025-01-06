@@ -26,7 +26,7 @@ buildScraper()
         scraper_id=$(basename "$dir")
     fi
 
-    if [ "$dir" != "./scrapers" ]; then
+    if [ "$dir" != "./s3l-scrapers" ]; then
         versionFile="$dir"
     fi
 
@@ -48,7 +48,7 @@ buildScraper()
     ignore="-x $ignore package"
 
     pushd "$dir" > /dev/null
-    if [ "$dir" != "./scrapers" ]; then
+    if [ "$dir" != "./s3l-scrapers" ]; then
         zip -r "$zipfile" . ${ignore} > /dev/null
     else
         zip "$zipfile" "$scraper_id.yml" > /dev/null
@@ -75,15 +75,15 @@ buildScraper()
 }
 
 # find all yml files in ./scrapers - these are packages individually
-for f in ./scrapers/*.yml; do 
+for f in ./s3l-scrapers/*.yml; do 
     buildScraper "$f"
 done
 
-find ./scrapers/ -mindepth 2 -name *.yml -print0 | while read -d $'\0' f; do
+find ./s3l-scrapers/ -mindepth 2 -name *.yml -print0 | while read -d $'\0' f; do
     buildScraper "$f"
 done
 
 # handle dependency packages
-find ./scrapers/ -mindepth 2 -name package -print0 | while read -d $'\0' f; do
+find ./s3l-scrapers/ -mindepth 2 -name package -print0 | while read -d $'\0' f; do
     buildScraper "$f"
 done

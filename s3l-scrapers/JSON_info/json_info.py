@@ -3,12 +3,17 @@ import sys
 import json
 import os
 
-# to import from a parent directory we need to add that directory to the system path
-csd = os.path.dirname(os.path.realpath(__file__))  # get current script directory
-parent = os.path.dirname(csd)  # parent directory (should be the scrapers one)
+# search parent directories recursively until we find the "scrapers" dir, and add it to path, to allow importing py_common
+pathName = os.path.dirname(os.path.realpath(__file__))  # get current script directory
+driveName = os.path.splitdrive(pathName)[0]  # get drive path, to set as the end of the search if something goes wrong
+while pathName != driveName and os.path.basename(pathName) != "scrapers":
+    pathName = os.path.dirname(pathName)
+
 sys.path.append(
-    parent
+    pathName
 )  # add parent dir to sys path so that we can import py_common from there
+
+print(pathName, file=sys.stderr, flush=True)
 
 try:
     from py_common import log, graphql
@@ -65,7 +70,7 @@ def mapValues(scene_data):
         output['image'] = scene_data['image']
         output['tags'] = list(map(lambda x: {"Name":x}, scene_data['tags']))
         output['studio'] = {"Name" : scene_data['studio'] }
-        output['details'] = scene_date['details']
+        output['details'] = scene_data['details']
     
     # Schema v1.1 introduces a field for performers
     if formatVersion > 1.1:
