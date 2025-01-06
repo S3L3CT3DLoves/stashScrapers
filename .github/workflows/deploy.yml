@@ -17,25 +17,15 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-    - name: Checkout master
+    - name: Checkout main
       uses: actions/checkout@v4
       with:
-        path: master
-        ref: master
+        path: main
+        ref: main
         fetch-depth: 0
     - run: |
         cd master
         ./build_site.sh ../_site/stable
-    - name: Checkout Stable
-      uses: actions/checkout@v4
-      with:
-        path: dev
-        # replace with develop tag/branch when necessary
-        ref: master
-        fetch-depth: 0
-    - run: |
-        cd dev
-        ../master/build_site.sh ../_site/develop
     - uses: actions/setup-node@v4
       with:
         node-version: latest
