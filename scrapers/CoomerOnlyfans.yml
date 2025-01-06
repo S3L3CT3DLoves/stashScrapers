@@ -1,0 +1,40 @@
+name: CoomerOnlyfans
+sceneByURL:
+  - action: scrapeXPath
+    url:
+      - https://coomer.su/onlyfans/
+    scraper: sceneScraper
+sceneByFragment:
+  action: scrapeXPath
+  scraper: sceneScraper
+
+
+xPathScrapers:
+  sceneScraper:
+    scene:
+      Title:
+        selector: //div[@class="post__content"]/pre//text()
+        concat: " "
+      Details:
+        selector: //div[@class="post__content"]/pre//text()
+        concat: " "
+      Date:
+        selector: //div[@class="post__published"]/child::text()
+        postProcess:
+          - parseDate: "2006-01-02T05:04:05"
+      Studio:
+        Name:
+         selector: //a[contains(@class,"post__user-name")]/text()
+         postProcess:
+            - replace:
+                - regex: '$'
+                  with: " (Onlyfans)"
+      URL:
+        selector: //meta[@name="user" or @name="id"]//@content
+        concat: "/"
+        replace:
+          - regex: '(.*)'
+            with: "https://onlyfans.com/$1/"
+driver:
+  useCDP: true
+# Last Updated Jan 04, 2025
