@@ -2,7 +2,7 @@ name: Deploy repository to Github Pages
 
 on:
   push:
-    branches: [ master, stable ]
+    branches: [ main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,14 +24,14 @@ jobs:
         ref: main
         fetch-depth: 0
     - run: |
-        cd master
+        cd main
         ./build_site.sh ../_site/stable
     - uses: actions/setup-node@v4
       with:
         node-version: latest
     - name: Generate html index page
       run: |
-        cd master/site_generator
+        cd main/site_generator
         npm i -g ts-node
         npm ci
         npm run ci-build
