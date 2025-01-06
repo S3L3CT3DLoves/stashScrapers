@@ -3,24 +3,23 @@ import sys
 import json
 import os
 
-# search parent directories recursively until we find the "scrapers" dir, and add it to path, to allow importing py_common
-pathName = os.path.dirname(os.path.realpath(__file__))  # get current script directory
-driveName = os.path.splitdrive(pathName)[0]  # get drive path, to set as the end of the search if something goes wrong
-while pathName != driveName and os.path.basename(pathName) != "scrapers":
-    pathName = os.path.dirname(pathName)
-
-sys.path.append(
-    pathName
-)  # add parent dir to sys path so that we can import py_common from there
-
-print(pathName, file=sys.stderr, flush=True)
+# try importing config
+import config
+stashconfig = config.stashconfig if hasattr(config, 'stashconfig') else {
+    "scheme": "http",
+    "Host":"localhost",
+    "Port": "9999",
+    "ApiKey": "",
+}
 
 try:
-    from py_common import log, graphql
+    import stashapi.log as log
+    from stashapi.stashapp import StashInterface
 except ModuleNotFoundError:
-    print("You need to download the folder 'py_common' from the community repo! "
-          "(CommunityScrapers/tree/master/scrapers/py_common)", file=sys.stderr)
+    print("You need to install the stashapp-tools (stashapi) python module. (cmd): pip install stashapp-tools", file=sys.stderr)
     sys.exit()
+
+stash = StashInterface(stashconfig)
 
 JSONS_PATH = Path("jsons")
 
@@ -29,20 +28,11 @@ def get_scene_data(fragment_data):
     scene_title = fragment_data["title"]
     scene_files = []
 
-    response = graphql.callGraphQL("""
-    query FileInfoBySceneId($id: ID) {
-      findScene(id: $id) {
-        files {
-          path
-          size
-        }
-      }
-    }""", {"id": scene_id})
+    response = stash.find_scene(scene_id)
 
-    if response and response["findScene"]:
-        log.info(response["findScene"])
-        for f in response["findScene"]["files"]:
-            scene_files.append({"filename": os.path.basename(f["path"]), "size": f["size"]})
+    if response:
+        for f in response["files"]:
+            scene_files.append(os.path.basename(f["path"]))
         return {"id": scene_id, "title": scene_title, "files": scene_files}
     return {}
 
@@ -81,7 +71,7 @@ def mapValues(scene_data):
 if sys.argv[1] == "fragment":
     fragment = json.loads(sys.stdin.read())
     scene = get_scene_data(fragment)
-    filename = scene['files'][0]['filename'][:-3] + "json"
+    filename = scene['files'][0][:-3] + "json"
     filename = JSONS_PATH / filename
     try:
         with open(filename, 'rb') as f:
