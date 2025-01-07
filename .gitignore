@@ -10,11 +10,4 @@ yarn-error.log
 
 .github
 
-# Index build artifact
-/_site
-
-# generator
-site_generator/site/assets/fuse-index.json
-site_generator/site/assets/scrapers.json
-
 scrapers/JSON_info/config.py
