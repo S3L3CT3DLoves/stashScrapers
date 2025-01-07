@@ -8,15 +8,13 @@ yarn-error.log
 *.json
 *.log
 
+.github
+
 # Index build artifact
 /_site
 
 # generator
 site_generator/site/assets/fuse-index.json
 site_generator/site/assets/scrapers.json
-
-# Github Actions config
-.github
-
 
 scrapers/JSON_info/config.py
