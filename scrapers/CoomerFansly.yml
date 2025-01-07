@@ -18,7 +18,7 @@ xPathScrapers:
       Date:
         selector: //div[@class="post__published"]/child::text()
         postProcess:
-          - parseDate: "2006-01-02 05:04:05"
+          - parseDate: "2006-01-02T05:04:05"
       Studio:
         Name:
          selector: //a[contains(@class,"post__user-name")]/text()
@@ -33,4 +33,4 @@ xPathScrapers:
             with: "https://fansly.com/post/$1"
 driver:
   useCDP: true
-# Last Updated Jan 01, 2025
+# Last Updated Jan 07, 2025
