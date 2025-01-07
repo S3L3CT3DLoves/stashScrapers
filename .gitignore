@@ -1,0 +1,22 @@
+.DS_Store
+node_modules
+yarn-error.log
+
+# Scraper-generated files
+**/__pycache__/
+*.ini
+*.json
+*.log
+
+# Index build artifact
+/_site
+
+# generator
+site_generator/site/assets/fuse-index.json
+site_generator/site/assets/scrapers.json
+
+# Github Actions config
+.github
+
+
+scrapers/JSON_info/config.py
