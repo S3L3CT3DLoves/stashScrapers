@@ -5,8 +5,8 @@ sceneByURL:
       - https://coomer.su/fansly/
     scraper: sceneScraper
 sceneByFragment:
-  action: scrapeXPath
-  scraper: sceneScraper
+  - action: scrapeXPath
+    scraper: sceneScraper
 
 
 xPathScrapers:
